@@ -143,12 +143,12 @@ export const properties: Property[] = [
     id: 'prop-1',
     title: 'Stunning Beachfront Villa',
     description: 'Beautiful modern villa with ocean views, private beach access, and luxurious amenities.',
-    image: 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=800&h=600&fit=crop',
+    image: '/assets/unsplash/unsplash-9a746e442094.jpg',
     images: [
-      'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1473116763249-2faaef81ccda?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1519046904884-53103b34b206?w=1200&h=800&fit=crop',
+      '/assets/unsplash/unsplash-3733e1fdea5f.jpg',
+      '/assets/unsplash/unsplash-0154d77aca56.jpg',
+      '/assets/unsplash/unsplash-abf99d803957.jpg',
+      '/assets/unsplash/unsplash-3be302818605.jpg',
     ],
     location: {
       city: 'Malibu',
@@ -175,10 +175,10 @@ export const properties: Property[] = [
     id: 'prop-2',
     title: 'Cozy Mountain Cabin',
     description: 'Perfect retreat in the mountains with fireplace, hot tub, and hiking trails nearby.',
-    image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop',
+    image: '/assets/unsplash/unsplash-22a99cc06f00.jpg',
     images: [
-      'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=1200&h=800&fit=crop',
+      '/assets/unsplash/unsplash-88130b56482c.jpg',
+      '/assets/unsplash/unsplash-b3b8ebb833de.jpg',
       'https://images.unsplash.com/photo-1510312305653-8ed496efbe75?w=1200&h=800&fit=crop',
     ],
     location: {
@@ -206,10 +206,10 @@ export const properties: Property[] = [
     id: 'prop-3',
     title: 'Luxury Downtown Penthouse',
     description: 'Stunning city views, modern design, rooftop access, and concierge service included.',
-    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=600&fit=crop',
+    image: '/assets/unsplash/unsplash-8f8cfb79e558.jpg',
     images: [
-      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&h=800&fit=crop',
+      '/assets/unsplash/unsplash-a59418ad7350.jpg',
+      '/assets/unsplash/unsplash-b08a8d4e4ed3.jpg',
       'https://images.unsplash.com/photo-1600566752355-3979ff696fe9?w=1200&h=800&fit=crop',
     ],
     location: {
@@ -237,10 +237,10 @@ export const properties: Property[] = [
     id: 'prop-4',
     title: 'Charming Countryside Cottage',
     description: 'Rural escape with garden, farm animals, and peaceful surroundings. Perfect for families.',
-    image: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=800&h=600&fit=crop',
+    image: '/assets/unsplash/unsplash-57bf784fe60c.jpg',
     images: [
-      'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=1200&h=800&fit=crop',
+      '/assets/unsplash/unsplash-41e78ebeb8d4.jpg',
+      '/assets/unsplash/unsplash-b3b8ebb833de.jpg',
       'https://images.unsplash.com/photo-1500382017468-9049fee74a62?w=1200&h=800&fit=crop',
     ],
     location: {
@@ -268,11 +268,11 @@ export const properties: Property[] = [
     id: 'prop-5',
     title: 'Modern City Apartment',
     description: 'Stylish studio in the heart of the city. Close to restaurants, shops, and attractions.',
-    image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=600&fit=crop',
+    image: '/assets/unsplash/unsplash-1b5c8132cdee.jpg',
     images: [
-      'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&h=800&fit=crop',
+      '/assets/unsplash/unsplash-ef43f138069d.jpg',
+      '/assets/unsplash/unsplash-ecf59ba37e23.jpg',
+      '/assets/unsplash/unsplash-68ee7b155c60.jpg',
     ],
     location: {
       city: 'Paris',
@@ -299,11 +299,11 @@ export const properties: Property[] = [
     id: 'prop-6',
     title: 'Tropical Paradise Pool House',
     description: 'Gorgeous pool villa in tropical setting with lush gardens and private beach access.',
-    image: 'https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&h=600&fit=crop',
+    image: '/assets/unsplash/unsplash-aea261a66899.jpg',
     images: [
-      'https://images.unsplash.com/photo-1540541338287-41700207dee6?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=1200&h=800&fit=crop',
+      '/assets/unsplash/unsplash-2f8d4c30cea7.jpg',
+      '/assets/unsplash/unsplash-17d4f157431f.jpg',
+      '/assets/unsplash/unsplash-e738ea9b00cb.jpg',
     ],
     location: {
       city: 'Bali',
@@ -330,10 +330,10 @@ export const properties: Property[] = [
     id: 'prop-7',
     title: 'Modern Minimalist Loft',
     description: 'Industrial-style loft with high ceilings and city skyline views.',
-    image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=600&fit=crop',
+    image: '/assets/unsplash/unsplash-870701837dc2.jpg',
     images: [
-      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&h=800&fit=crop',
+      '/assets/unsplash/unsplash-ecf59ba37e23.jpg',
+      '/assets/unsplash/unsplash-68ee7b155c60.jpg',
     ],
     location: {
       city: 'Berlin',
@@ -360,9 +360,9 @@ export const properties: Property[] = [
     id: 'prop-8',
     title: 'Secluded A-Frame in the Woods',
     description: 'Unique architectural gem surrounded by pine forest and mountain views.',
-    image: 'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=800&h=600&fit=crop',
+    image: '/assets/unsplash/unsplash-724846b0171a.jpg',
     images: [
-      'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=1200&h=800&fit=crop',
+      '/assets/unsplash/unsplash-b3b8ebb833de.jpg',
       'https://images.unsplash.com/photo-1510312305653-8ed496efbe75?w=1200&h=800&fit=crop',
     ],
     location: {
