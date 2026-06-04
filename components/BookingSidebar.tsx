@@ -16,9 +16,21 @@ export function BookingSidebar({ property }: BookingSidebarProps) {
   const [checkOut, setCheckOut] = useState('');
   const [isSaved, setIsSaved] = useState(false);
 
-  const nights = checkIn && checkOut ? Math.ceil(
-    (new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24)
-  ) : 0;
+  const today = new Date().toISOString().split('T')[0];
+
+  const minCheckOut = checkIn
+    ? new Date(new Date(checkIn).getTime() + 86_400_000).toISOString().split('T')[0]
+    : today;
+
+  const nights =
+    checkIn && checkOut
+      ? Math.ceil(
+          (new Date(checkOut).getTime() - new Date(checkIn).getTime()) /
+            (1000 * 60 * 60 * 24)
+        )
+      : 0;
+
+  const isInvalidRange = Boolean(checkIn && checkOut && nights <= 0);
 
   const totalPrice = nights * property.pricePerNight;
 
@@ -55,7 +67,13 @@ export function BookingSidebar({ property }: BookingSidebarProps) {
             <input
               type="date"
               value={checkIn}
-              onChange={(e) => setCheckIn(e.target.value)}
+              min={today}
+              onChange={(e) => {
+                setCheckIn(e.target.value);
+                if (checkOut && checkOut <= e.target.value) {
+                  setCheckOut('');
+                }
+              }}
               className="flex-1 border-0 bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none"
             />
           </div>
@@ -71,10 +89,16 @@ export function BookingSidebar({ property }: BookingSidebarProps) {
             <input
               type="date"
               value={checkOut}
+              min={minCheckOut}
               onChange={(e) => setCheckOut(e.target.value)}
               className="flex-1 border-0 bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none"
             />
           </div>
+          {isInvalidRange && (
+            <p className="mt-1 text-xs text-red-500">
+              Check-out must be after check-in.
+            </p>
+          )}
         </div>
 
         {/* Guests */}
@@ -89,20 +113,33 @@ export function BookingSidebar({ property }: BookingSidebarProps) {
               min="1"
               max={property.capacity.guests}
               value={guests}
-              onChange={(e) => setGuests(Math.max(1, parseInt(e.target.value) || 0))}
+              onChange={(e) =>
+                setGuests(
+                  Math.min(
+                    property.capacity.guests,
+                    Math.max(1, parseInt(e.target.value) || 1)
+                  )
+                )
+              }
               className="flex-1 border-0 bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none"
             />
           </div>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Maximum {property.capacity.guests} guests
+          </p>
         </div>
       </div>
 
       {/* Reserve Button */}
-      <Button className="w-full bg-primary text-primary-foreground py-3 text-base font-semibold hover:opacity-90 transition">
+      <Button
+        className="w-full bg-primary text-primary-foreground py-3 text-base font-semibold hover:opacity-90 transition"
+        disabled={isInvalidRange}
+      >
         Reserve
       </Button>
 
       {/* Price Breakdown */}
-      {nights > 0 && (
+      {nights > 0 && !isInvalidRange && (
         <div className="space-y-2 border-t border-border pt-6 text-sm">
           <div className="flex justify-between">
             <span className="text-foreground">
