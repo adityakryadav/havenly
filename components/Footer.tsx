@@ -64,9 +64,21 @@ export function Footer() {
                     Anti-discrimination
                   </Link>
                 </li>
-                <li><a href="#" className="hover:underline">Disability support</a></li>
-                <li><a href="#" className="hover:underline">Cancellation options</a></li>
-                <li><a href="#" className="hover:underline">Report neighbourhood concern</a></li>
+                <li>
+                  <Link href="/disability-support" className="hover:underline">
+                    Disability Support
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/cancellation-options" className="hover:underline">
+                    Cancellation Options
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/report-neighbourhood-concerns" className="hover:underline">
+                    Report Neighbourhood Concerns
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>
