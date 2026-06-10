@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export function Footer() {
   return (
     <footer className="bg-[#F7F7F7] border-t border-border pt-12 pb-8">
@@ -71,7 +73,11 @@ export function Footer() {
               <ul className="space-y-3 text-sm text-muted-foreground">
                 <li><a href="#" className="hover:underline">Newsroom</a></li>
                 <li><a href="#" className="hover:underline">New features</a></li>
-                <li><a href="#" className="hover:underline">Careers</a></li>
+                <li>
+                <Link href="/careers" className="hover:underline">
+                    Careers
+                  </Link>
+                </li>
                 <li><a href="#" className="hover:underline">Investors</a></li>
                 <li><a href="#" className="hover:underline">Havenly.org emergency stays</a></li>
               </ul>
