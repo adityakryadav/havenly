@@ -1,4 +1,8 @@
+ terms-page
 import Link from 'next/link';
+
+import Link from "next/link";
+
 
 export function Footer() {
   return (
@@ -49,12 +53,36 @@ export function Footer() {
             <div>
               <h3 className="font-semibold text-sm text-foreground mb-4">Support</h3>
               <ul className="space-y-3 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:underline">Help Centre</a></li>
-                <li><a href="#" className="hover:underline">AirCover</a></li>
-                <li><a href="#" className="hover:underline">Anti-discrimination</a></li>
-                <li><a href="#" className="hover:underline">Disability support</a></li>
-                <li><a href="#" className="hover:underline">Cancellation options</a></li>
-                <li><a href="#" className="hover:underline">Report neighbourhood concern</a></li>
+                <li>
+                <Link href="/help-centre" className="hover:underline">
+                    Help Centre
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/aircover" className="hover:underline">
+                    Aircover
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/anti-discrimination" className="hover:underline">
+                    Anti-discrimination
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/disability-support" className="hover:underline">
+                    Disability Support
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/cancellation-options" className="hover:underline">
+                    Cancellation Options
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/report-neighbourhood-concerns" className="hover:underline">
+                    Report Neighbourhood Concerns
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>
@@ -73,7 +101,11 @@ export function Footer() {
               <ul className="space-y-3 text-sm text-muted-foreground">
                 <li><a href="#" className="hover:underline">Newsroom</a></li>
                 <li><a href="#" className="hover:underline">New features</a></li>
-                <li><a href="#" className="hover:underline">Careers</a></li>
+                <li>
+                <Link href="/careers" className="hover:underline">
+                    Careers
+                  </Link>
+                </li>
                 <li><a href="#" className="hover:underline">Investors</a></li>
                 <li><a href="#" className="hover:underline">Havenly.org emergency stays</a></li>
               </ul>
