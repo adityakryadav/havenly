@@ -70,8 +70,7 @@ export function Navbar() {
               )}
             </Link>
 
-
-          <Link
+            <Link
               href="/favorites"
               className={`relative flex flex-col items-center ${
                 pathname === "/favorites"
@@ -84,8 +83,6 @@ export function Navbar() {
                 <span className="absolute -bottom-2 w-4 border-b-2 border-foreground rounded-full"></span>
               )}
             </Link>
-
-
           </div>
 
           {/* Desktop Right Menu */}
@@ -211,11 +208,9 @@ export function Navbar() {
                 Host Dashboard
               </button>
             </Link>
-          <Link
-              href="/favorites" className='block'>
+            <Link href="/favorites" className="block">
               <Button className="w-full px-0 py-2 text-left font-medium text-foreground hover:bg-muted bg-transparent rounded-lg flex items-center gap-2 mb-2">
-
-              <Heart size={12}/> Favorites
+                <Heart size={12} /> Favorites
               </Button>
             </Link>
 
@@ -224,7 +219,6 @@ export function Navbar() {
                 Become a host
               </Button>
             </Link>
-
 
             <hr className="my-2 border-border" />
             <button className="w-full px-4 py-2 text-left font-medium text-red-600 hover:bg-muted rounded-lg flex items-center gap-2">
