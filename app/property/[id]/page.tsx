@@ -8,11 +8,12 @@ import { BookingSidebar } from '@/components/BookingSidebar';
 import { ReviewCard } from '@/components/ReviewCard';
 import { ReviewForm } from '@/components/ReviewForm';
 import {
-  properties,
+  Property,
   reviews,
   hosts,
   amenities as allAmenities,
 } from '@/lib/dummy-data';
+import { getStoredProperties } from '@/lib/properties';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -57,7 +58,16 @@ const amenityIconMap: Record<string, React.ReactNode> = {
 export default function PropertyPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const { toast } = useToast();
-  const property = properties.find((p) => p.id === id);
+  const [property, setProperty] = useState<Property | undefined>(undefined);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const allProps = getStoredProperties();
+    const found = allProps.find((p) => p.id === id);
+    setProperty(found);
+    setLoading(false);
+  }, [id]);
+
   const host = property ? hosts.find((h) => h.id === property.hostId) : null;
   const propertyReviews = property
     ? reviews.filter((r) => r.propertyId === property.id)
@@ -92,6 +102,17 @@ export default function PropertyPage({ params }: { params: Promise<{ id: string 
   );
 
   const allReviews = [...userReviews, ...propertyReviews];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="flex items-center justify-center py-20">
+          <p className="text-muted-foreground">Loading property details...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!property || !host) {
     return (
