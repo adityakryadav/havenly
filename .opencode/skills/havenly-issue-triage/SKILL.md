@@ -1,3 +1,4 @@
+---
 name: havenly-issue-triage
 description: >
   Triages GitHub issues for the Havenly rental marketplace (ELUSOC 2026).
@@ -9,7 +10,6 @@ description: >
   assigned. Triggers include: "triage this issue", "assign this", "what label
   for #N", "add label to issue", "assign to contributor", or when a screenshot
   or link to a Havenly issue is shared.
-
 ---
 
 ## ELUSOC Difficulty Labels

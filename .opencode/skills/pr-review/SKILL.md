@@ -1,3 +1,4 @@
+---
 name: pr-review
 description: >
   Reviews pull requests for the Havenly rental marketplace (ELUSOC 2026).
@@ -9,7 +10,6 @@ description: >
   "pr feedback", "check this PR", "is my PR ready", "feedback on PR",
   "review #N", "look at this contribution", or provides a PR number or
   GitHub PR URL for the Havenly repository.
-
 ---
 
 ## Philosophy
