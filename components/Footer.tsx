@@ -86,10 +86,29 @@ export function Footer() {
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li><a href="/havenly-your-home" className="hover:underline">Havenly your home</a></li>
               <li><a href="#" className="hover:underline">AirCover for Hosts</a></li>
-              <li><a href="/hosting-resources" className="hover:underline">Hosting resources</a></li>
-              <li><a href="#" className="hover:underline">Community forum</a></li>
-              <li><Link href="/hosting-responsibility" className="hover:underline">Hosting responsibly</Link></li>
-              <li><a href="/free-hosting-class" className="hover:underline">Join a free hosting class</a></li>
+              <li>
+                <Link href="/hosting-resources" className="hover:underline">
+                  Hosting resources
+                </Link>
+              </li>
+
+              <li>
+                <Link href="/community-forum" className="hover:underline">
+                  Community forum
+                </Link>
+              </li>
+
+              <li>
+                <Link href="/hosting-responsibility" className="hover:underline">
+                  Hosting responsibly
+                </Link>
+              </li>
+
+              <li>
+                <Link href="/free-hosting-class" className="hover:underline">
+                  Join a free hosting class
+                </Link>
+              </li>
             </ul>
           </div>
           <div>
