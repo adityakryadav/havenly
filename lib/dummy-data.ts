@@ -75,7 +75,7 @@ export interface Booking {
   checkOut: Date;
   guests: number;
   totalPrice: number;
-  status: 'confirmed' | 'cancelled' | 'completed' | 'upcoming';
+  status: 'confirmed' | 'cancelled' | 'completed' | 'upcoming' ;
   createdAt: Date;
 }
 
@@ -435,6 +435,18 @@ export const bookings: Booking[] = [
     status: 'completed',
     createdAt: new Date('2025-02-01'),
   },
+
+  {
+    id: "booking-5",
+    propertyId: "prop-5",
+    guestId: "guest-1",
+    checkIn: new Date("2025-08-10"),
+    checkOut: new Date("2025-08-14"),
+    guests: 2,
+    totalPrice: 480,
+    status: "upcoming",
+    createdAt: new Date(),
+  }
 ];
 
 // Reviews

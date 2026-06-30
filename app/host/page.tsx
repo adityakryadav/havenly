@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Navbar } from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Property, hosts, bookings } from '@/lib/dummy-data';
+import { Property, bookings, Booking } from '@/lib/dummy-data';
 import { Edit, Trash2, Plus, Eye, Calendar, Users } from 'lucide-react';
 import { getStoredProperties, deleteStoredProperty } from '@/lib/properties';
 import { useToast } from '@/hooks/use-toast';
@@ -24,13 +24,58 @@ import {
 export default function HostDashboardPage() {
   const currentHostId = 'host-1'; // Mock current host
   const [hostProperties, setHostProperties] = useState<Property[]>([]);
+  const [hostBookings, setHostBookings] = useState<Booking[]>([]);
   const [deletingPropertyId, setDeletingPropertyId] = useState<string | null>(null);
   const { toast } = useToast();
+  const [bookingAction, setBookingAction] = useState<{id: string; action: "accept" | "decline";} | null>(null);
 
   useEffect(() => {
     const allProps = getStoredProperties();
-    setHostProperties(allProps.filter((p) => p.hostId === currentHostId));
-  }, []);
+    const filtered = allProps.filter((p) => p.hostId === currentHostId);
+    setHostProperties(filtered);
+
+    setHostBookings(
+      bookings.filter((booking) =>
+        filtered.some((property) => property.id === booking.propertyId)
+      ));
+    }, []);
+
+    const handleBookingAction = () => {
+      if (!bookingAction) return;
+
+      if (bookingAction.action === "accept") {
+        handleAccept(bookingAction.id);
+      } else {
+        handleDecline(bookingAction.id);
+      }
+    
+      setBookingAction(null);
+    };
+
+
+  const handleAccept = (bookingId : string) => {
+    setHostBookings((prev) => 
+      prev.map((booking) => 
+        booking.id === bookingId? { ...booking, status: "confirmed" } : booking
+      )
+    );
+    toast({
+      title: "Booking accepted",
+      description: "Booking request has been accepted.",
+    });
+  }
+
+  const handleDecline = (bookingId : string) => {
+    setHostBookings((prev) => 
+      prev.map((booking) => 
+        booking.id === bookingId? {...booking, status: "cancelled"} : booking
+      )
+    );
+    toast({
+      title: "Booking Rejected",
+      description: "Booking request has been declined",
+    })
+  }
 
   const handleDeleteConfirm = () => {
     if (deletingPropertyId) {
@@ -45,9 +90,9 @@ export default function HostDashboardPage() {
     }
   };
 
-  const hostBookings = bookings.filter((b) =>
-    hostProperties.some((p) => p.id === b.propertyId)
-  );
+  // const hostBookings = bookings.filter((b) =>
+  //   hostProperties.some((p) => p.id === b.propertyId)
+  // );
 
   return (
     <main className="min-h-screen bg-background">
@@ -218,7 +263,9 @@ export default function HostDashboardPage() {
                       <span
                         className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${booking.status === 'confirmed'
                             ? 'bg-green-100 text-green-800'
-                            : 'bg-blue-100 text-blue-800'
+                            : booking.status === 'cancelled'
+                            ? "bg-red-100 text-red-800"
+                            : "bg-blue-100 text-blue-800"
                           }`}
                       >
                         {booking.status.charAt(0).toUpperCase() +
@@ -227,10 +274,26 @@ export default function HostDashboardPage() {
                     </div>
                   </div>
                   <div className="flex gap-3 pt-4 border-t border-border">
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      disabled={booking.status !== "upcoming"}
+                      onClick={() => setBookingAction({
+                        id: booking.id,
+                        action: "accept",
+                      })}
+                    >
                       Accept
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      disabled={booking.status !== "upcoming"}
+                      onClick={() => setBookingAction({
+                        id: booking.id,
+                        action: "decline",
+                      })}
+                    >
                       Decline
                     </Button>
                   </div>
@@ -268,6 +331,32 @@ export default function HostDashboardPage() {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleDeleteConfirm} className="bg-red-600 hover:bg-red-700 text-white border-red-600">
               Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={bookingAction !== null} onOpenChange={(open) => !open && setBookingAction(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {bookingAction?.action === "accept"
+                ? "Confirm Booking"
+                : "Decline Booking"}
+            </AlertDialogTitle>
+              
+            <AlertDialogDescription>
+              {bookingAction?.action === "accept"
+                ? "Are you sure you want to confirm this booking?"
+                : "Are you sure you want to decline this booking?"}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+              
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+              
+            <AlertDialogAction onClick={handleBookingAction}>
+              Yes
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
