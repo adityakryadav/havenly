@@ -96,6 +96,15 @@ export default function Home() {
 
   useEffect(() => {
     setPropertyList(getStoredProperties());
+
+    const handleUpdate = () => {
+      setPropertyList(getStoredProperties());
+    };
+
+    window.addEventListener('propertiesUpdated', handleUpdate);
+    return () => {
+      window.removeEventListener('propertiesUpdated', handleUpdate);
+    };
   }, []);
 
   const filteredProperties = selectedCategory
