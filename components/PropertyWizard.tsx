@@ -292,7 +292,7 @@ export function PropertyWizard({
                   <select
                     value={formData.type}
                     onChange={(e) =>
-                      setFormData({ ...formData, type: e.target.value })
+                      setFormData({ ...formData, type: e.target.value as 'Entire Place' | 'Room' | 'Shared Room' })
                     }
                     className="w-full rounded-lg border border-border px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary bg-background"
                   >

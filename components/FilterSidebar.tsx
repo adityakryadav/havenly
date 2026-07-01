@@ -19,7 +19,7 @@ export function FilterSidebar({ onClose, isOpen = true }: FilterSidebarProps) {
     type: true,
   });
 
-  const toggleFilter = (filter: string) => {
+  const toggleFilter = (filter: keyof typeof expandedFilters) => {
     setExpandedFilters((prev) => ({
       ...prev,
       [filter]: !prev[filter],

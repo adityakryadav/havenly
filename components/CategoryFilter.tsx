@@ -111,7 +111,7 @@ export function CategoryFilter({
                 }`}
               >
                 <div className="text-muted-foreground hover:text-foreground transition">
-                  {iconMap[category.icon]}
+                  {iconMap[category.icon as keyof typeof iconMap]}
                 </div>
                 <span className="text-xs font-medium whitespace-nowrap">
                   {category.name}
