@@ -119,6 +119,15 @@ function Home() {
 
   useEffect(() => {
     setPropertyList(getStoredProperties());
+
+    const handleUpdate = () => {
+      setPropertyList(getStoredProperties());
+    };
+
+    window.addEventListener('propertiesUpdated', handleUpdate);
+    return () => {
+      window.removeEventListener('propertiesUpdated', handleUpdate);
+    };
   }, []);
 
   const city = searchParams.get('city') || '';
