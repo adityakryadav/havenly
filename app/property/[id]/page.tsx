@@ -13,7 +13,7 @@ import {
   hosts,
   amenities as allAmenities,
 } from '@/lib/dummy-data';
-import { getStoredProperties } from '@/lib/properties';
+import { getStoredProperties, saveStoredProperty } from '@/lib/properties';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -91,14 +91,33 @@ export default function PropertyPage({ params }: { params: Promise<{ id: string 
 
   const handleReviewSubmit = useCallback(
     (review: (typeof propertyReviews)[number]) => {
+      if (!property) return;
+
       setUserReviews((prev) => {
         const updated = [review, ...prev];
         localStorage.setItem(`havenly-reviews-${review.propertyId}`, JSON.stringify(updated));
+
+        // Recalculate average rating and review count
+        const allCombinedReviews = [...updated, ...propertyReviews];
+        const newCount = allCombinedReviews.length;
+        const totalRatingSum = allCombinedReviews.reduce((sum, r) => sum + r.rating, 0);
+        const newAverageRating = totalRatingSum / newCount;
+
+        const updatedProperty = {
+          ...property,
+          rating: newAverageRating,
+          reviewCount: newCount,
+        };
+
+        // Update in-memory property state and persist to localStorage/backend
+        setProperty(updatedProperty);
+        saveStoredProperty(updatedProperty);
+
         return updated;
       });
       toast({ title: 'Review submitted!', description: 'Thank you for your feedback.' });
     },
-    [toast]
+    [property, propertyReviews, toast]
   );
 
   const allReviews = [...userReviews, ...propertyReviews];
