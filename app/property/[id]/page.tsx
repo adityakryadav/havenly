@@ -291,6 +291,56 @@ export default function PropertyPage({ params }: { params: Promise<{ id: string 
               </div>
             </div>
 
+            {/* Map Location Preview */}
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold text-foreground">Where you'll be</h3>
+              <p className="text-sm text-muted-foreground">
+                {property.location.city}, {property.location.state}, {property.location.country}
+              </p>
+
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${property.location.coordinates.lat},${property.location.coordinates.lng}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block relative h-72 w-full rounded-2xl overflow-hidden border border-border shadow-sm group bg-muted/40"
+              >
+                {/* Visual Map Grid Pattern */}
+                <div className="absolute inset-0 bg-grid-slate-200 dark:bg-grid-slate-800 opacity-20" />
+
+                {/* Styled Map Background */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-muted/50 via-background to-muted/50 flex items-center justify-center">
+                  <div className="text-center space-y-3 z-10 p-6">
+                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary animate-pulse">
+                      <MapPin size={24} className="stroke-[2.5]" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-foreground text-base">Location Preview</h4>
+                      <p className="text-xs text-muted-foreground">
+                        Lat: {property.location.coordinates.lat.toFixed(4)}, Lng: {property.location.coordinates.lng.toFixed(4)}
+                      </p>
+                    </div>
+                    <Button variant="outline" size="sm" className="bg-background/80 hover:bg-background transition pointer-events-none">
+                      Click to Open in Google Maps
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Map Interface Elements */}
+                <div className="absolute top-4 right-4 flex flex-col gap-1 z-10 pointer-events-none">
+                  <div className="bg-background/80 border border-border text-foreground px-2 py-1 rounded text-[10px] font-bold shadow-sm">
+                    3D
+                  </div>
+                  <div className="bg-background/80 border border-border text-foreground px-2 py-1 rounded text-[10px] font-bold shadow-sm">
+                    SAT
+                  </div>
+                </div>
+
+                <div className="absolute bottom-4 left-4 bg-background/80 border border-border text-foreground text-[10px] px-2 py-1 rounded shadow-sm z-10 pointer-events-none">
+                  Google Maps API © 2026
+                </div>
+              </a>
+            </div>
+
             {/* Reviews */}
             <div>
               <h3 className="text-xl font-bold text-foreground mb-4">
