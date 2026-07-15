@@ -42,12 +42,9 @@ export function CategoryFilter({
 
   const checkScroll = () => {
     if (scrollContainerRef.current) {
-      setCanScrollLeft(scrollContainerRef.current.scrollLeft > 0);
-      setCanScrollRight(
-        scrollContainerRef.current.scrollLeft <
-          scrollContainerRef.current.scrollWidth -
-            scrollContainerRef.current.clientWidth
-      );
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+      setCanScrollLeft(scrollLeft > 2);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 2);
     }
   };
 
@@ -58,14 +55,17 @@ export function CategoryFilter({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth',
       });
-      setTimeout(checkScroll, 300);
+      setTimeout(checkScroll, 350);
     }
   };
 
   useEffect(() => {
-    checkScroll();
+    const timer = setTimeout(checkScroll, 100);
     window.addEventListener('resize', checkScroll);
-    return () => window.removeEventListener('resize', checkScroll);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', checkScroll);
+    };
   }, []);
 
   return (
@@ -97,8 +97,7 @@ export function CategoryFilter({
           <div
             ref={scrollContainerRef}
             onScroll={checkScroll}
-            className="flex gap-8 overflow-x-auto scrollbar-hide py-4"
-            style={{ scrollBehavior: 'smooth' }}
+            className="flex gap-8 overflow-x-auto py-4 scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {categories.map((category) => (
               <button
@@ -121,15 +120,6 @@ export function CategoryFilter({
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        .scrollbar-hide {
-          scrollbar-width: none;
-        }
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
     </div>
   );
 }
