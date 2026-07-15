@@ -8,16 +8,37 @@ import { Input } from '@/components/ui/input';
 interface FilterSidebarProps {
   onClose?: () => void;
   isOpen?: boolean;
+  priceRange: { min: number; max: number };
+  setPriceRange: (range: { min: number; max: number }) => void;
+  minRating: number;
+  setMinRating: (rating: number) => void;
+  selectedTypes: string[];
+  setSelectedTypes: (types: string[]) => void;
+  selectedAmenities: string[];
+  setSelectedAmenities: (amenities: string[]) => void;
 }
 
-export function FilterSidebar({ onClose, isOpen = true }: FilterSidebarProps) {
-  const [priceRange, setPriceRange] = useState({ min: 0, max: 500 });
-  const [minRating, setMinRating] = useState(0);
+export function FilterSidebar({
+  onClose,
+  isOpen = true,
+  priceRange,
+  setPriceRange,
+  minRating,
+  setMinRating,
+  selectedTypes,
+  setSelectedTypes,
+  selectedAmenities,
+  setSelectedAmenities,
+}: FilterSidebarProps) {
+  const [priceRangeInternal, setPriceRangeInternal] = useState(priceRange);
+  const [minRatingInternal, setMinRatingInternal] = useState(minRating);
   const [expandedFilters, setExpandedFilters] = useState({
     price: true,
     rating: true,
     type: true,
+    amenities: true,
   });
+  const [amenitySearch, setAmenitySearch] = useState('');
 
   const toggleFilter = (filter: keyof typeof expandedFilters) => {
     setExpandedFilters((prev) => ({
@@ -31,6 +52,21 @@ export function FilterSidebar({ onClose, isOpen = true }: FilterSidebarProps) {
     { id: 'room', label: 'Room' },
     { id: 'shared', label: 'Shared Room' },
   ];
+
+  const amenitiesList = [
+    { id: 'wifi', name: 'Wifi' },
+    { id: 'kitchen', name: 'Kitchen' },
+    { id: 'parking', name: 'Free Parking' },
+    { id: 'pool', name: 'Pool' },
+    { id: 'ac', name: 'Air Conditioning' },
+    { id: 'tv', name: 'TV' },
+    { id: 'pets', name: 'Pets Allowed' },
+    { id: 'workspace', name: 'Dedicated Workspace' },
+  ];
+
+  const filteredAmenities = amenitiesList.filter((a) =>
+    a.name.toLowerCase().includes(amenitySearch.toLowerCase())
+  );
 
   const ratings = [
     { value: 4.5, label: '4.5+ (Excellent)' },
@@ -166,7 +202,7 @@ export function FilterSidebar({ onClose, isOpen = true }: FilterSidebarProps) {
         </div>
 
         {/* Property Type Filter */}
-        <div className="mb-6">
+        <div className="mb-6 border-b border-border pb-6">
           <button
             onClick={() => toggleFilter('type')}
             className="flex w-full items-center justify-between font-semibold text-foreground hover:text-primary transition"
@@ -186,6 +222,14 @@ export function FilterSidebar({ onClose, isOpen = true }: FilterSidebarProps) {
                 <label key={type.id} className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="checkbox"
+                    checked={selectedTypes.includes(type.label)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedTypes([...selectedTypes, type.label]);
+                      } else {
+                        setSelectedTypes(selectedTypes.filter((t) => t !== type.label));
+                      }
+                    }}
                     className="h-4 w-4 cursor-pointer accent-primary rounded"
                   />
                   <span className="text-sm text-foreground">{type.label}</span>
@@ -195,13 +239,67 @@ export function FilterSidebar({ onClose, isOpen = true }: FilterSidebarProps) {
           )}
         </div>
 
+        {/* Amenities Search & Filter */}
+        <div className="mb-6 border-b border-border pb-6">
+          <button
+            onClick={() => toggleFilter('amenities')}
+            className="flex w-full items-center justify-between font-semibold text-foreground hover:text-primary transition"
+          >
+            <span>Amenities</span>
+            <ChevronDown
+              size={20}
+              className={`transition-transform ${
+                expandedFilters.amenities ? 'rotate-180' : ''
+              }`}
+            />
+          </button>
+
+          {expandedFilters.amenities && (
+            <div className="mt-4 space-y-3">
+              <Input
+                type="text"
+                placeholder="Search amenities..."
+                value={amenitySearch}
+                onChange={(e) => setAmenitySearch(e.target.value)}
+                className="h-9 text-xs"
+              />
+              <div className="space-y-2 max-h-40 overflow-y-auto pr-1">
+                {filteredAmenities.length > 0 ? (
+                  filteredAmenities.map((amenity) => (
+                    <label key={amenity.id} className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={selectedAmenities.includes(amenity.id)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedAmenities([...selectedAmenities, amenity.id]);
+                          } else {
+                            setSelectedAmenities(selectedAmenities.filter((id) => id !== amenity.id));
+                          }
+                        }}
+                        className="h-4 w-4 cursor-pointer accent-primary rounded"
+                      />
+                      <span className="text-sm text-foreground">{amenity.name}</span>
+                    </label>
+                  ))
+                ) : (
+                  <p className="text-xs text-muted-foreground">No amenities match your search.</p>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Clear Filters Button */}
         <Button
           variant="outline"
           className="w-full"
           onClick={() => {
-            setPriceRange({ min: 0, max: 500 });
+            setPriceRange({ min: 0, max: 1000 });
             setMinRating(0);
+            setSelectedTypes([]);
+            setSelectedAmenities([]);
+            setAmenitySearch('');
           }}
         >
           Clear All
