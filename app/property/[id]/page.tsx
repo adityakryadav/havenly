@@ -18,6 +18,12 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
   Star,
   MapPin,
   Users,
@@ -60,6 +66,7 @@ export default function PropertyPage({ params }: { params: Promise<{ id: string 
   const { toast } = useToast();
   const [property, setProperty] = useState<Property | undefined>(undefined);
   const [loading, setLoading] = useState(true);
+  const [hostModalOpen, setHostModalOpen] = useState(false);
 
   useEffect(() => {
     const allProps = getStoredProperties();
@@ -234,7 +241,7 @@ export default function PropertyPage({ params }: { params: Promise<{ id: string 
             </div>
 
             {/* Host Info */}
-            <Card className="p-6 border-border">
+            <Card className="p-6 border-border cursor-pointer hover:shadow-md transition duration-200" onClick={() => setHostModalOpen(true)}>
               <h3 className="text-xl font-bold text-foreground mb-4">Meet your host</h3>
               <div className="flex items-start gap-4">
                 <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-full bg-muted">
@@ -246,30 +253,85 @@ export default function PropertyPage({ params }: { params: Promise<{ id: string 
                   />
                 </div>
                 <div className="flex-1">
-                  <h4 className="text-lg font-semibold text-foreground">
+                  <h4 className="text-lg font-semibold text-foreground flex items-center gap-2">
                     {host.name}
+                    <span className="inline-flex items-center gap-1 rounded bg-blue-100 px-1.5 py-0.5 text-xs font-semibold text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+                      ✓ Verified
+                    </span>
                   </h4>
                   <p className="text-sm text-muted-foreground mb-3">
                     Joined {host.joinedDate.getFullYear()}
                   </p>
-                  <p className="text-sm text-foreground mb-4">{host.bio}</p>
-                  <div className="space-y-2 text-sm">
-                    {host.responseRate && (
-                      <p className="text-foreground">
-                        <span className="font-semibold">{host.responseRate}%</span>{' '}
-                        response rate
-                      </p>
-                    )}
-                    {host.responseTime && (
-                      <p className="text-foreground">
-                        Responds within{' '}
-                        <span className="font-semibold">{host.responseTime}</span>
-                      </p>
-                    )}
+                  <p className="text-sm text-foreground mb-4 line-clamp-2">{host.bio}</p>
+                  <div className="text-xs text-primary font-semibold hover:underline">
+                    View full host profile →
                   </div>
                 </div>
               </div>
             </Card>
+
+            <Dialog open={hostModalOpen} onOpenChange={setHostModalOpen}>
+              <DialogContent className="sm:max-w-md p-6 border-border">
+                <DialogHeader className="mb-2">
+                  <DialogTitle className="text-xl font-bold text-foreground">Host Profile</DialogTitle>
+                </DialogHeader>
+                <div className="flex flex-col items-center text-center gap-4 py-2">
+                  <div className="relative h-24 w-24 overflow-hidden rounded-full border-2 border-border shadow-md bg-muted">
+                    <Image
+                      src={host.avatar}
+                      alt={host.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-foreground flex items-center justify-center gap-2">
+                      {host.name}
+                      <span className="text-blue-500 text-lg">✓</span>
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Member since {host.joinedDate.toLocaleDateString(undefined, { year: 'numeric', month: 'long' })}
+                    </p>
+                  </div>
+
+                  <p className="text-sm text-foreground leading-relaxed max-w-sm">
+                    {host.bio}
+                  </p>
+
+                  <div className="w-full grid grid-cols-2 gap-4 border-t border-b border-border py-4 my-2">
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-foreground">
+                        {host.responseRate || 100}%
+                      </div>
+                      <div className="text-xs text-muted-foreground uppercase font-semibold">
+                        Response Rate
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-foreground">
+                        {host.responseTime || 'within an hour'}
+                      </div>
+                      <div className="text-xs text-muted-foreground uppercase font-semibold">
+                        Response Time
+                      </div>
+                    </div>
+                  </div>
+
+                  <Button
+                    onClick={() => {
+                      setHostModalOpen(false);
+                      toast({
+                        title: `Message sent to ${host.name}`,
+                        description: "The host will respond shortly via email.",
+                      });
+                    }}
+                    className="w-full bg-primary text-primary-foreground font-semibold py-2 rounded-lg"
+                  >
+                    Contact Host
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
 
             {/* Amenities */}
             <div>
