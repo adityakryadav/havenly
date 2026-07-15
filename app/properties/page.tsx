@@ -17,6 +17,11 @@ export default function PropertiesPage() {
   const [priceFilter, setPriceFilter] = useState({ min: 0, max: 1000 });
   const [ratingFilter, setRatingFilter] = useState(0);
   const [propertyList, setPropertyList] = useState<Property[]>(getStoredProperties());
+  const [visibleCount, setVisibleCount] = useState(12);
+
+  useEffect(() => {
+    setVisibleCount(12);
+  }, [priceFilter, ratingFilter, sortBy]);
 
   useEffect(() => {
     setPropertyList(getStoredProperties());
@@ -112,14 +117,27 @@ export default function PropertiesPage() {
 
             {/* Properties Grid */}
             {sorted.length > 0 ? (
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {sorted.map((property, index) => (
-                  <PropertyCard 
-                    key={property.id} 
-                    property={property} 
-                    priority={index < 4}
-                  />
-                ))}
+              <div className="space-y-8">
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  {sorted.slice(0, visibleCount).map((property, index) => (
+                    <PropertyCard 
+                      key={property.id} 
+                      property={property} 
+                      priority={index < 4}
+                    />
+                  ))}
+                </div>
+
+                {visibleCount < sorted.length && (
+                  <div className="flex justify-center pt-4 pb-8">
+                    <Button
+                      onClick={() => setVisibleCount((prev) => prev + 12)}
+                      className="px-8 py-2 bg-primary text-primary-foreground font-semibold rounded-lg hover:opacity-90 transition cursor-pointer animate-fade-in"
+                    >
+                      Load More Listings
+                    </Button>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-20">
