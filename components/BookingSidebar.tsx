@@ -135,7 +135,7 @@ export function BookingSidebar({ property }: BookingSidebarProps) {
       {/* Reserve Button */}
       <Button
         className="w-full bg-primary text-primary-foreground py-3 text-base font-semibold hover:opacity-90 transition"
-        disabled={isInvalidRange}
+        disabled={isInvalidRange || !checkIn || !checkOut || nights <= 0}
       >
         Reserve
       </Button>
