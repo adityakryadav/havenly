@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Calendar, Users, Star, Share2, Heart } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Property } from '@/lib/dummy-data';
 import { useToast } from '@/hooks/use-toast';
+import { getFavoriteIds } from './PropertyCard';
 
 interface BookingSidebarProps {
   property: Property;
@@ -17,6 +18,46 @@ export function BookingSidebar({ property }: BookingSidebarProps) {
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [isSaved, setIsSaved] = useState(false);
+
+  const syncFavoriteStatus = useCallback(() => {
+    const ids = getFavoriteIds();
+    setIsSaved(ids.includes(property.id));
+  }, [property.id]);
+
+  useEffect(() => {
+    syncFavoriteStatus();
+
+    const handleUpdate = () => {
+      syncFavoriteStatus();
+    };
+
+    window.addEventListener('storage', handleUpdate);
+    window.addEventListener('favoritesUpdated', handleUpdate);
+
+    return () => {
+      window.removeEventListener('storage', handleUpdate);
+      window.removeEventListener('favoritesUpdated', handleUpdate);
+    };
+  }, [syncFavoriteStatus]);
+
+  const handleSaveToggle = () => {
+    if (typeof window === 'undefined') return;
+
+    try {
+      const ids = getFavoriteIds();
+      let updatedIds: string[];
+      if (isSaved) {
+        updatedIds = ids.filter((id) => id !== property.id);
+      } else {
+        updatedIds = [...ids.filter((id) => id !== property.id), property.id];
+      }
+      localStorage.setItem('favorites', JSON.stringify(updatedIds));
+      setIsSaved(!isSaved);
+      window.dispatchEvent(new Event('favoritesUpdated'));
+    } catch (e) {
+      console.error('Failed to toggle favorite:', e);
+    }
+  };
 
   const today = new Date().toISOString().split('T')[0];
 
@@ -180,7 +221,7 @@ export function BookingSidebar({ property }: BookingSidebarProps) {
           variant="outline"
           size="sm"
           className="flex-1"
-          onClick={() => setIsSaved(!isSaved)}
+          onClick={handleSaveToggle}
         >
           <Heart
             size={16}
