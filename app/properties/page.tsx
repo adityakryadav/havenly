@@ -16,6 +16,7 @@ export default function PropertiesPage() {
   const [sortBy, setSortBy] = useState<SortOption>('featured');
   const [priceFilter, setPriceFilter] = useState({ min: 0, max: 1000 });
   const [ratingFilter, setRatingFilter] = useState(0);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [propertyList, setPropertyList] = useState<Property[]>(getStoredProperties());
 
   useEffect(() => {
@@ -36,7 +37,9 @@ export default function PropertiesPage() {
     const matchesPrice =
       p.pricePerNight >= priceFilter.min && p.pricePerNight <= priceFilter.max;
     const matchesRating = p.rating >= ratingFilter;
-    return matchesPrice && matchesRating;
+    const matchesType =
+      selectedTypes.length === 0 || selectedTypes.includes(p.type);
+    return matchesPrice && matchesRating && matchesType;
   });
 
   // Sort properties
@@ -62,6 +65,12 @@ export default function PropertiesPage() {
         <FilterSidebar
           isOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
+          priceRange={priceFilter}
+          setPriceRange={setPriceFilter}
+          minRating={ratingFilter}
+          setMinRating={setRatingFilter}
+          selectedTypes={selectedTypes}
+          setSelectedTypes={setSelectedTypes}
         />
 
         {/* Main Content */}

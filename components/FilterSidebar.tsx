@@ -8,11 +8,24 @@ import { Input } from '@/components/ui/input';
 interface FilterSidebarProps {
   onClose?: () => void;
   isOpen?: boolean;
+  priceRange: { min: number; max: number };
+  setPriceRange: (range: { min: number; max: number }) => void;
+  minRating: number;
+  setMinRating: (rating: number) => void;
+  selectedTypes: string[];
+  setSelectedTypes: (types: string[]) => void;
 }
 
-export function FilterSidebar({ onClose, isOpen = true }: FilterSidebarProps) {
-  const [priceRange, setPriceRange] = useState({ min: 0, max: 500 });
-  const [minRating, setMinRating] = useState(0);
+export function FilterSidebar({
+  onClose,
+  isOpen = true,
+  priceRange,
+  setPriceRange,
+  minRating,
+  setMinRating,
+  selectedTypes,
+  setSelectedTypes,
+}: FilterSidebarProps) {
   const [expandedFilters, setExpandedFilters] = useState({
     price: true,
     rating: true,
@@ -186,6 +199,14 @@ export function FilterSidebar({ onClose, isOpen = true }: FilterSidebarProps) {
                 <label key={type.id} className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="checkbox"
+                    checked={selectedTypes.includes(type.label)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedTypes([...selectedTypes, type.label]);
+                      } else {
+                        setSelectedTypes(selectedTypes.filter((t) => t !== type.label));
+                      }
+                    }}
                     className="h-4 w-4 cursor-pointer accent-primary rounded"
                   />
                   <span className="text-sm text-foreground">{type.label}</span>
@@ -200,8 +221,9 @@ export function FilterSidebar({ onClose, isOpen = true }: FilterSidebarProps) {
           variant="outline"
           className="w-full"
           onClick={() => {
-            setPriceRange({ min: 0, max: 500 });
+            setPriceRange({ min: 0, max: 1000 });
             setMinRating(0);
+            setSelectedTypes([]);
           }}
         >
           Clear All
