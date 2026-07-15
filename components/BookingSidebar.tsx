@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Calendar, Users, Star, Share2, Heart } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Property } from '@/lib/dummy-data';
+import { Property, bookings } from '@/lib/dummy-data';
 import { useToast } from '@/hooks/use-toast';
 
 interface BookingSidebarProps {
@@ -35,6 +35,37 @@ export function BookingSidebar({ property }: BookingSidebarProps) {
   const isInvalidRange = Boolean(checkIn && checkOut && nights <= 0);
 
   const totalPrice = nights * property.pricePerNight;
+
+  const hasOverlap = checkIn && checkOut ? (() => {
+    const start = new Date(checkIn);
+    const end = new Date(checkOut);
+
+    let allBookings: any[] = [];
+    try {
+      const stored = localStorage.getItem('havenly-bookings');
+      if (stored) {
+        allBookings = JSON.parse(stored).map((b: any) => ({
+          ...b,
+          checkIn: new Date(b.checkIn),
+          checkOut: new Date(b.checkOut)
+        }));
+      }
+    } catch {}
+
+    const combinedBookings = [...allBookings, ...bookings.map(b => ({
+      ...b,
+      checkIn: new Date(b.checkIn),
+      checkOut: new Date(b.checkOut)
+    }))];
+
+    const propBookings = combinedBookings.filter(
+      (b) => b.propertyId === property.id && b.status !== 'cancelled'
+    );
+
+    return propBookings.some((b) => {
+      return start < b.checkOut && end > b.checkIn;
+    });
+  })() : false;
 
   return (
     <Card className="p-6 border-border sticky top-24 space-y-6">
@@ -101,6 +132,11 @@ export function BookingSidebar({ property }: BookingSidebarProps) {
               Check-out must be after check-in.
             </p>
           )}
+          {hasOverlap && (
+            <p className="mt-1 text-xs text-red-500">
+              Selected dates overlap with an existing booking.
+            </p>
+          )}
         </div>
 
         {/* Guests */}
@@ -135,7 +171,7 @@ export function BookingSidebar({ property }: BookingSidebarProps) {
       {/* Reserve Button */}
       <Button
         className="w-full bg-primary text-primary-foreground py-3 text-base font-semibold hover:opacity-90 transition"
-        disabled={isInvalidRange}
+        disabled={isInvalidRange || hasOverlap}
       >
         Reserve
       </Button>
