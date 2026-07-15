@@ -68,7 +68,19 @@ export default function PropertyPage({ params }: { params: Promise<{ id: string 
     setLoading(false);
   }, [id]);
 
-  const host = property ? hosts.find((h) => h.id === property.hostId) : null;
+  const host = property
+    ? hosts.find((h) => h.id === property.hostId) || {
+        id: property.hostId || 'host-default',
+        name: 'Verified Havenly Host',
+        email: 'host@havenly.com',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=DefaultHost',
+        isHost: true,
+        joinedDate: new Date('2023-01-01'),
+        bio: 'Welcome to our verified Havenly home! We are committed to providing premium rental experiences.',
+        responseRate: 100,
+        responseTime: 'within an hour',
+      }
+    : null;
   const propertyReviews = property
     ? reviews.filter((r) => r.propertyId === property.id)
     : [];
