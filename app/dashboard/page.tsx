@@ -35,9 +35,11 @@ export default function DashboardPage() {
                   property={property}
                   priority={index < 2}
                   onCancel={(id) => {
-                    setBookingList((prev) =>
-                      prev.map((b) => (b.id === id ? { ...b, status: 'cancelled' } : b))
-                    );
+                    if (window.confirm("Are you sure you want to cancel this booking?")) {
+                      setBookingList((prev) =>
+                        prev.map((b) => (b.id === id ? { ...b, status: 'cancelled' } : b))
+                      );
+                    }
                   }}
                 />
               );
@@ -66,9 +68,11 @@ export default function DashboardPage() {
                   property={property}
                   priority={index < 2}
                   onCancel={(id) => {
-                    setBookingList((prev) =>
-                      prev.map((b) => (b.id === id ? { ...b, status: 'cancelled' } : b))
-                    );
+                    if (window.confirm("Are you sure you want to cancel this booking?")) {
+                      setBookingList((prev) =>
+                        prev.map((b) => (b.id === id ? { ...b, status: 'cancelled' } : b))
+                      );
+                    }
                   }}
                 />
               );
