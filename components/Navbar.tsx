@@ -45,6 +45,27 @@ function NavbarContent() {
   const lastScrollY = useRef(0);
   const pathname = usePathname();
 
+  const [userAvatar, setUserAvatar] = useState('https://api.dicebear.com/7.x/avataaars/svg?seed=John');
+
+  useEffect(() => {
+    const loadUserAvatar = () => {
+      try {
+        const stored = localStorage.getItem('havenly-user');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed.avatar) {
+            setUserAvatar(parsed.avatar);
+          }
+        }
+      } catch (e) {
+        console.error('Failed to load user avatar in navbar:', e);
+      }
+    };
+    loadUserAvatar();
+    window.addEventListener('profileUpdated', loadUserAvatar);
+    return () => window.removeEventListener('profileUpdated', loadUserAvatar);
+  }, []);
+
   useEffect(() => {
     lastScrollY.current = window.scrollY;
 
@@ -172,10 +193,11 @@ function NavbarContent() {
                   <Menu size={18} className="text-foreground shrink-0" />
                   <div className="h-8 w-8 shrink-0 rounded-full bg-muted flex items-center justify-center overflow-hidden">
                     <Image
-                      src="https://api.dicebear.com/7.x/avataaars/svg?seed=John"
+                      src={userAvatar}
                       alt="User"
                       width={32}
                       height={32}
+                      className="object-cover h-8 w-8"
                     />
                   </div>
                 </button>

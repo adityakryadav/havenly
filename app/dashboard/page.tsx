@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { DashboardTabs } from '@/components/DashboardTabs';
 import { BookingCard } from '@/components/BookingCard';
@@ -13,6 +13,32 @@ export default function DashboardPage() {
   const [user, setUser] = useState<User>(currentUser);
   const [editOpen, setEditOpen] = useState(false);
   const [bookingList, setBookingList] = useState(bookings);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('havenly-user');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        setUser({
+          ...currentUser,
+          ...parsed,
+          joinedDate: new Date(parsed.joinedDate || currentUser.joinedDate),
+        });
+      }
+    } catch (e) {
+      console.error('Failed to load user profile in dashboard:', e);
+    }
+  }, []);
+
+  const handleProfileSave = (updatedUser: User) => {
+    setUser(updatedUser);
+    try {
+      localStorage.setItem('havenly-user', JSON.stringify(updatedUser));
+      window.dispatchEvent(new Event('profileUpdated'));
+    } catch (e) {
+      console.error('Failed to save user profile:', e);
+    }
+  };
 
   // Separate bookings by status
   const upcomingBookings = bookingList.filter((b) => b.status === 'upcoming' || b.status === 'confirmed');
@@ -125,7 +151,7 @@ export default function DashboardPage() {
           open={editOpen}
           onOpenChange={setEditOpen}
           user={user}
-          onSave={setUser}
+          onSave={handleProfileSave}
         />
 
         {/* Bookings Tabs */}
