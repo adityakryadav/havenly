@@ -296,6 +296,56 @@ export default function PropertyPage({ params }: { params: Promise<{ id: string 
               <h3 className="text-xl font-bold text-foreground mb-4">
                 Reviews ({allReviews.length})
               </h3>
+
+              {/* Star Rating distribution summary */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center p-6 border border-border rounded-xl mb-6 bg-card">
+                {/* Left side: Avg Rating large */}
+                <div className="text-center md:border-r border-border md:pr-6">
+                  <div className="text-5xl font-extrabold text-foreground mb-2">
+                    {property.rating.toFixed(2)}
+                  </div>
+                  <div className="flex justify-center gap-0.5 mb-2">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star
+                        key={i}
+                        size={16}
+                        className={
+                          i < Math.round(property.rating)
+                            ? 'fill-yellow-400 text-yellow-400'
+                            : 'text-muted-foreground'
+                        }
+                      />
+                    ))}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    {allReviews.length} reviews
+                  </div>
+                </div>
+
+                {/* Right side: Star progress bars */}
+                <div className="md:col-span-2 space-y-2">
+                  {[5, 4, 3, 2, 1].map((stars) => {
+                    const count = allReviews.filter((r) => Math.round(r.rating) === stars).length;
+                    const percent = allReviews.length > 0 ? (count / allReviews.length) * 100 : 0;
+                    return (
+                      <div key={stars} className="flex items-center gap-4 text-sm">
+                        <span className="w-12 text-foreground font-medium flex items-center gap-1 shrink-0">
+                          {stars} <Star size={12} className="fill-yellow-400 text-yellow-400" />
+                        </span>
+                        <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-yellow-400 rounded-full transition-all"
+                            style={{ width: `${percent}%` }}
+                          />
+                        </div>
+                        <span className="w-8 text-right text-muted-foreground font-medium shrink-0">
+                          {count}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
               <div className="space-y-4">
                 {allReviews.length > 0 ? (
                   allReviews.map((review) => (
