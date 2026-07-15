@@ -159,6 +159,34 @@ export function PropertyWizard({
       return;
     }
 
+    const priceVal = parseFloat(formData.pricePerNight);
+    if (isNaN(priceVal) || priceVal <= 0) {
+      alert("Please enter a valid price per night greater than 0.");
+      return;
+    }
+
+    const guestsVal = parseInt(formData.guests.toString(), 10);
+    const bedroomsVal = parseInt(formData.bedrooms.toString(), 10);
+    const bedsVal = parseInt(formData.beds.toString(), 10);
+    const bathroomsVal = parseInt(formData.bathrooms.toString(), 10);
+
+    if (isNaN(guestsVal) || guestsVal < 1) {
+      alert("Guests capacity must be at least 1.");
+      return;
+    }
+    if (isNaN(bedroomsVal) || bedroomsVal < 1) {
+      alert("Bedrooms count must be at least 1.");
+      return;
+    }
+    if (isNaN(bedsVal) || bedsVal < 1) {
+      alert("Beds count must be at least 1.");
+      return;
+    }
+    if (isNaN(bathroomsVal) || bathroomsVal < 1) {
+      alert("Bathrooms count must be at least 1.");
+      return;
+    }
+
     const propertyData = {
       title: formData.title,
       description: formData.description,
