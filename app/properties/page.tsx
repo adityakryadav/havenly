@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Navbar } from '@/components/Navbar';
 import { FilterSidebar } from '@/components/FilterSidebar';
 import { PropertyCard } from '@/components/PropertyCard';
@@ -11,12 +12,16 @@ import { Menu, ArrowUpDown } from 'lucide-react';
 
 type SortOption = 'featured' | 'price-low' | 'price-high' | 'rating';
 
-export default function PropertiesPage() {
+function PropertiesPageContent() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [sortBy, setSortBy] = useState<SortOption>('featured');
   const [priceFilter, setPriceFilter] = useState({ min: 0, max: 1000 });
   const [ratingFilter, setRatingFilter] = useState(0);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [propertyList, setPropertyList] = useState<Property[]>(getStoredProperties());
+
+  const searchParams = useSearchParams();
+  const locationParam = searchParams.get('location') || '';
 
   useEffect(() => {
     setPropertyList(getStoredProperties());
@@ -36,7 +41,17 @@ export default function PropertiesPage() {
     const matchesPrice =
       p.pricePerNight >= priceFilter.min && p.pricePerNight <= priceFilter.max;
     const matchesRating = p.rating >= ratingFilter;
-    return matchesPrice && matchesRating;
+    const matchesType =
+      selectedTypes.length === 0 || selectedTypes.includes(p.type);
+    
+    // Fuzzy match on city, state, country
+    const matchesLocation =
+      !locationParam ||
+      p.location.city.toLowerCase().includes(locationParam.toLowerCase()) ||
+      p.location.state.toLowerCase().includes(locationParam.toLowerCase()) ||
+      p.location.country.toLowerCase().includes(locationParam.toLowerCase());
+      
+    return matchesPrice && matchesRating && matchesType && matchesLocation;
   });
 
   // Sort properties
@@ -62,6 +77,12 @@ export default function PropertiesPage() {
         <FilterSidebar
           isOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
+          priceRange={priceFilter}
+          setPriceRange={setPriceFilter}
+          minRating={ratingFilter}
+          setMinRating={setRatingFilter}
+          selectedTypes={selectedTypes}
+          setSelectedTypes={setSelectedTypes}
         />
 
         {/* Main Content */}
@@ -73,7 +94,12 @@ export default function PropertiesPage() {
                 <h1 className="text-2xl md:text-3xl font-bold text-foreground">
                   Properties
                 </h1>
-                <p className="text-muted-foreground">
+                {locationParam && (
+                  <p className="text-sm font-semibold text-primary mt-1">
+                    Showing results for "{locationParam}"
+                  </p>
+                )}
+                <p className="text-muted-foreground mt-1">
                   {sorted.length} properties available
                 </p>
               </div>
@@ -128,7 +154,7 @@ export default function PropertiesPage() {
                     No properties found
                   </h2>
                   <p className="text-muted-foreground">
-                    Try adjusting your filters to find more properties.
+                    Try adjusting your filters or location search to find more properties.
                   </p>
                 </div>
               </div>
@@ -137,5 +163,20 @@ export default function PropertiesPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function PropertiesPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background flex flex-col">
+        <div className="h-16 border-b border-border bg-background animate-pulse" />
+        <div className="flex-1 flex items-center justify-center">
+          <p className="text-muted-foreground">Loading properties...</p>
+        </div>
+      </div>
+    }>
+      <PropertiesPageContent />
+    </Suspense>
   );
 }

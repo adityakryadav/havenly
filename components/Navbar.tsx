@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Search, Menu, X, LogOut, LayoutDashboard, Home, Heart } from 'lucide-react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -44,6 +44,8 @@ function NavbarContent() {
   const [showSearch, setShowSearch] = useState(true);
   const lastScrollY = useRef(0);
   const pathname = usePathname();
+  const router = useRouter();
+  const [mobileWhere, setMobileWhere] = useState('');
 
   useEffect(() => {
     lastScrollY.current = window.scrollY;
@@ -225,6 +227,13 @@ function NavbarContent() {
               <Input
                 type="text"
                 placeholder="Search..."
+                value={mobileWhere}
+                onChange={(e) => setMobileWhere(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && mobileWhere.trim()) {
+                    router.push(`/properties?location=${encodeURIComponent(mobileWhere.trim())}`);
+                  }
+                }}
                 className="border-0 bg-transparent placeholder:text-muted-foreground focus:outline-none focus-visible:ring-0"
               />
             </div>
