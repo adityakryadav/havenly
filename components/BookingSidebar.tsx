@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Calendar, Users, Star, Share2, Heart } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Property } from '@/lib/dummy-data';
 import { useToast } from '@/hooks/use-toast';
+import { formatPrice } from '@/lib/currency';
 
 interface BookingSidebarProps {
   property: Property;
@@ -17,6 +18,15 @@ export function BookingSidebar({ property }: BookingSidebarProps) {
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [isSaved, setIsSaved] = useState(false);
+  const [, setCurrencyTick] = useState(0);
+
+  useEffect(() => {
+    const handleCurrencyChange = () => {
+      setCurrencyTick((tick) => tick + 1);
+    };
+    window.addEventListener('currencyChanged', handleCurrencyChange);
+    return () => window.removeEventListener('currencyChanged', handleCurrencyChange);
+  }, []);
 
   const today = new Date().toISOString().split('T')[0];
 
@@ -42,7 +52,7 @@ export function BookingSidebar({ property }: BookingSidebarProps) {
       <div>
         <div className="flex items-baseline gap-2">
           <span className="text-3xl font-bold text-foreground">
-            ${property.pricePerNight}
+            {formatPrice(property.pricePerNight)}
           </span>
           <span className="text-muted-foreground">per night</span>
         </div>
@@ -145,19 +155,19 @@ export function BookingSidebar({ property }: BookingSidebarProps) {
         <div className="space-y-2 border-t border-border pt-6 text-sm">
           <div className="flex justify-between">
             <span className="text-foreground">
-              ${property.pricePerNight} × {nights} nights
+              {formatPrice(property.pricePerNight)} × {nights} nights
             </span>
             <span className="font-semibold text-foreground">
-              ${property.pricePerNight * nights}
+              {formatPrice(property.pricePerNight * nights)}
             </span>
           </div>
           <div className="flex justify-between">
             <span className="text-foreground">Cleaning fee</span>
-            <span className="font-semibold text-foreground">$50</span>
+            <span className="font-semibold text-foreground">{formatPrice(50)}</span>
           </div>
           <div className="flex justify-between border-t border-border pt-2">
             <span className="font-semibold text-foreground">Total</span>
-            <span className="font-bold text-foreground">${totalPrice + 50}</span>
+            <span className="font-bold text-foreground">{formatPrice(totalPrice + 50)}</span>
           </div>
         </div>
       )}

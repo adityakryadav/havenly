@@ -6,6 +6,7 @@ import { Heart, Star } from 'lucide-react';
 import { useState, useEffect, useCallback } from 'react';
 
 import type { Property } from '@/lib/dummy-data';
+import { formatPrice, getActiveCurrency } from '@/lib/currency';
 
 interface PropertyCardProps {
   property: Property;
@@ -44,6 +45,15 @@ export function PropertyCard({
   priority = false,
 }: PropertyCardProps) {
   const [isSaved, setIsSaved] = useState(false);
+  const [, setCurrencyTick] = useState(0);
+
+  useEffect(() => {
+    const handleCurrencyChange = () => {
+      setCurrencyTick((tick) => tick + 1);
+    };
+    window.addEventListener('currencyChanged', handleCurrencyChange);
+    return () => window.removeEventListener('currencyChanged', handleCurrencyChange);
+  }, []);
 
   const syncFavoriteStatus = useCallback(() => {
     const ids = getFavoriteIds();
@@ -157,9 +167,10 @@ export function PropertyCard({
               isCompact ? 'text-sm' : 'text-[15px]'
             }`}
           >
-            <span className="text-foreground">
-              ₹{Math.round(property.pricePerNight*100).toLocaleString()} for 2 nights
+            <span className="text-foreground font-semibold">
+              {formatPrice(property.pricePerNight)}
             </span>
+            <span className="text-muted-foreground ml-1">night</span>
 
             <span className="mx-1.5 font-bold">·</span>
 

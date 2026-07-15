@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ExpandedSearchBar } from './expanded-search-bar';
+import { getActiveCurrency, setActiveCurrency, CurrencyCode } from '@/lib/currency';
 
 export function Navbar() {
   return (
@@ -44,6 +45,17 @@ function NavbarContent() {
   const [showSearch, setShowSearch] = useState(true);
   const lastScrollY = useRef(0);
   const pathname = usePathname();
+
+  const [activeCurrency, setActiveCurrencyState] = useState<CurrencyCode>('USD');
+
+  useEffect(() => {
+    const handleCurrencyChange = () => {
+      setActiveCurrencyState(getActiveCurrency());
+    };
+    handleCurrencyChange();
+    window.addEventListener('currencyChanged', handleCurrencyChange);
+    return () => window.removeEventListener('currencyChanged', handleCurrencyChange);
+  }, []);
 
   useEffect(() => {
     lastScrollY.current = window.scrollY;
@@ -155,12 +167,16 @@ function NavbarContent() {
               </Link>
 
               <ThemeToggle />
-              <Button variant="ghost" size="icon" className="rounded-full text-foreground hover:bg-muted">
-                {/* Globe Icon */}
-              </Button>
-
-              <Button variant="ghost" size="icon" className="rounded-full text-foreground hover:bg-muted">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /><path d="M2 12h20" /></svg>
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  const current = getActiveCurrency();
+                  setActiveCurrency(current === 'USD' ? 'INR' : 'USD');
+                }}
+                className="rounded-full text-foreground hover:bg-muted font-semibold text-xs px-3 h-9 flex items-center gap-1.5"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /><path d="M2 12h20" /></svg>
+                {activeCurrency === 'USD' ? 'USD ($)' : 'INR (₹)'}
               </Button>
 
               {/* User Menu Dropdown */}
